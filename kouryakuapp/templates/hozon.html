@@ -1,0 +1,50 @@
+//django対応メイン
+<article class="guide">
+    <h3>ステージ1の攻略</h3>
+    <p>ステージ1の攻略ポイントを詳しく解説します。</p>
+    <div class="interactions">
+        <form method="POST" action="#">
+            {% csrf_token %}
+            <button type="submit" class="like-button">👍{{ post.like_count }}</button>
+        </form>
+        <div class="comments">
+            <h4>コメント</h4>
+            <ul class="comment-list">
+                {% for comment in post.comments.all %}
+                <li>{{ comment.content }} - <small>{{ comment.author }}</small></li>
+                {% endfor %}
+            </ul>
+            <form method="POST" action="#">
+                {% csrf_token %}
+                <input type="text" name="content" class="comment-input" placeholder="コメントを入力" required>
+                <button type="submit">送信</button>
+            </form>
+        </div>
+    </div>
+</article>
+
+
+//script保存
+<script>
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const likeCount = button.querySelector('.like-count');
+            likeCount.textContent = parseInt(likeCount.textContent) + 1;
+        });
+    });
+
+    document.querySelectorAll('.comment-form').forEach(form => {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const commentInput = form.querySelector('.comment-input');
+            const commentList = form.parentElement.querySelector('.comment-list');
+
+            if (commentInput.value.trim()) {
+                const newComment = document.createElement('li');
+                newComment.textContent = commentInput.value;
+                commentList.appendChild(newComment);
+                commentInput.value = '';
+            }
+        });
+    });
+</script>

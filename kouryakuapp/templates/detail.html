@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}ゲーム攻略サイト-投稿詳細{% endblock %}
+
+{% block header %}
+<h1>ゲーム攻略サイト</h1>
+<nav>
+    <ul>
+        <li><a href="{% url 'kouryakuapp:index' %}">みんなの投稿一覧</a></li>
+        {% if user.is_authenticated %}
+        <li><a href="{% url 'kouryakuapp:mypage' %}">マイページ</a></li>
+        <li><a href="{% url 'kouryakuapp:post' %}">投稿</a></li>
+        <li><a href="{% url 'password_reset' %}">パスワードリセット</a></li>
+        <li><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
+        {% else %}
+        <li><a href="{% url 'accounts:signup' %}">サインアップ</a></li>
+        <li><a href="{% url 'accounts:login' %}">ログイン</a></li>
+        {% endif %}
+    </ul>
+</nav>
+</div>
+{% endblock %}
+
+
+{% block upper %}
+<section id="home" class="hero">
+    <h1>{{object.title}}</h1>
+    <br>
+    <a href={% url 'kouryakuapp:index' %}>
+        ゲーム攻略サイト
+    </a>
+    に{{object.user}}が
+    {{object.posted_at}}に投稿／カテゴリ:
+    <a>{{object.category}}</a>
+</span>
+</section>
+{% endblock %}
+
+
+
+<!-- Post Content-->
+{% block contents %}
+<article class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p>{{object.content}}</p>
+                <!-- 投稿者のみ削除ボタンを表示 -->
+                {% if object.user == user %}
+                <a href="{% url 'kouryakuapp:post_delete' object.pk %}" class="btn btn-danger">投稿を削除</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</article>
+
+
+{% endblock %}
+<!-- Footer-->
+
+{% block under %}
+<h3 class="comment-title">コメント</h3>
+<!--コメント-->
+{% for comment in object.comments.all %}
+<div class="comment-list">
+    <div class='border-bottom'><strong>{{ comment.user_name }}さん</strong>のコメント　{{ comment.comment_at }}
+        {% if comment.user_name == user %}
+        <!-- 投稿者のみ削除ボタンを表示 -->
+        <a href="{% url 'kouryakuapp:comment_delete' comment.pk %}" class="btn btn-danger btn-sm">削除</a>
+        {% endif %}
+    </div>
+    <!--改行しないようlinebreaksを設定,URL要素に<a>要素を設定-->
+    <div class='mt-2'>{{ comment.message | linebreaks | urlize }}</div>
+</div>
+{% empty %}
+<p>コメントはありません</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+<a href="{% url 'kouryakuapp:comment_create' object.pk %}">コメントを追加</a>
+{% else %}
+<p>コメントを投稿するにはログインが必要です。</p>
+{% endif %}
+{% endblock %}

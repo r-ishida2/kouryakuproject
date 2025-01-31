@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block contents %}
+<div class="container">
+    <h2>コメント削除</h2>
+    <p>本当にこのコメントを削除しますか？</p>
+    <p><strong>{{ object.message }}</strong></p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">削除</button>
+        <a href="{% url 'kouryakuapp:detail' object.target.pk %}" class="btn btn-secondary">キャンセル</a>
+    </form>
+</div>
+{% endblock %}

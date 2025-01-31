@@ -1,0 +1,12 @@
+<div class="container">
+    <h3>サーバーアップデート情報</h3>
+    
+    {% for update in updates %}
+        <div class="update-entry">
+            <p>{{ update.info_at|date:"Y年m月d日 H:i" }}/アップデート情報：{{ update.info}}</p>
+            <hr>
+        </div>
+    {% empty %}
+        <p>アップデート情報はありません。</p>
+    {% endfor %}
+</div>

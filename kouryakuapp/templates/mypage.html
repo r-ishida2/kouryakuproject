@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Mypage{% endblock %}
+{% block header %}
+<div class="container">
+    <h1>ゲーム攻略サイト</h1>
+    <nav>
+        <ul>
+            <li><a href="{% url 'kouryakuapp:index' %}">みんなの投稿一覧</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'kouryakuapp:mypage' %}">マイページ</a></li>
+            <li><a href="{% url 'kouryakuapp:post' %}">投稿</a></li>
+            <li><a href="{% url 'password_reset' %}">パスワードリセット</a></li>
+            <li><a href="{% url 'accounts:logout' %}">ログアウト</a></li>
+            {% else %}
+            <li><a href="{% url 'accounts:signup' %}">サインアップ</a></li>
+            <li><a href="{% url 'accounts:login' %}">ログイン</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
+{% block upper %}
+<section id="home" class="hero">
+    <h2><main>マイページ</main></h2>
+    <p>新しい投稿や今までの投稿を見よう</p>
+</section>
+{% endblock %}
+{% block contents %}
+{% if user.is_authenticated %}
+<br>
+<div style="text-align:center">
+    <h4>{{user.username}}さんのマイページ</h4>
+    {% if object_list.count == 0 %}
+    <p>{{user.username}}さんの投稿はありません</p>
+    {% else %}
+    <p>投稿<strong>{{object_list.count}}</strong>件</p>
+    {% endif %}
+    <a href="{% url 'kouryakuapp:post' %}">投稿する</a>
+</div>
+{% endif %}
+{% include "kouryakus.html" %}
+{% endblock %}
